@@ -1,4 +1,4 @@
-import { IsString } from "class-validator";
+import { IsNumber, IsString } from "class-validator";
 
 export class CreateArticleDto {
   @IsString()
@@ -20,4 +20,10 @@ export class CreateArticleDto {
     userId: string;
     username: string;
   }
+
+  @IsNumber()
+  likes: number;
+
+  @IsNumber()
+  comments: number;
 }

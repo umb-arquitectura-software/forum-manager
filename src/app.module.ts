@@ -5,6 +5,7 @@ import { ConfigModule } from '@nestjs/config';
 import { config } from './config/config';
 import { ArticleModule } from './app/article/article.module';
 import { CommentModule } from './app/comment/comment.module';
+import { LikeArticleModule } from './app/like-article/like-article.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { CommentModule } from './app/comment/comment.module';
     MongooseModule.forRoot(config().mongodb.database.connectionString),
     ArticleModule,
     CommentModule,
+    LikeArticleModule,
   ],
   controllers: [],
   providers: [],

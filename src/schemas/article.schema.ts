@@ -29,6 +29,12 @@ export class Article {
     userId: string;
     username: string;
   };
+
+  @Prop({ required: true })
+  likes: number;
+
+  @Prop({ required: true })
+  comments: number;
 }
 
 export const ArticleSchema = SchemaFactory.createForClass(Article);
