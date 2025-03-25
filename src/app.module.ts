@@ -4,6 +4,7 @@ import { ConfigModule } from '@nestjs/config';
 
 import { config } from './config/config';
 import { ArticleModule } from './app/article/article.module';
+import { CommentModule } from './app/comment/comment.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { ArticleModule } from './app/article/article.module';
     }),
     MongooseModule.forRoot(config().mongodb.database.connectionString),
     ArticleModule,
+    CommentModule,
   ],
   controllers: [],
   providers: [],
