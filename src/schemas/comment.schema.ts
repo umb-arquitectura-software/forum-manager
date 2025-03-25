@@ -10,13 +10,19 @@ export class Comment {
   @Prop({ required: true })
   text: string;
 
-  @Prop({ required: true })
+  @Prop({ required: true, type: {
+    articleId: String,
+    title: String
+  } })
   article: {
     articleId: string;
     title: string;
   };
 
-  @Prop({ required: true })
+  @Prop({ required: true, type: {
+    userId: String,
+    username: String
+  } })
   user: {
     userId: string;
     username: string;

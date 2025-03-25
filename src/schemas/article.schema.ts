@@ -21,7 +21,10 @@ export class Article {
   @Prop({ required: false})
   animalId: string;
 
-  @Prop({ required: true})
+  @Prop({ required: true, type: {
+    userId: String,
+    username: String
+  }})
   user: {
     userId: string;
     username: string;
