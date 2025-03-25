@@ -17,7 +17,7 @@ export class ArticleController {
     return this.articleService.findAll();
   }
 
-  @Get('byUser/:userId')
+  @Get('by-user/:userId')
   findAllByUser(@Param('userId') userId: string) {
     return this.articleService.findAllByUser(userId);
   }
