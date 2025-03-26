@@ -38,10 +38,10 @@ export class Article {
     username: string;
   };
 
-  @Prop({ required: true })
+  @Prop({ required: false, default: 0 })
   likes: number;
 
-  @Prop({ required: true })
+  @Prop({ required: false, default: 0 })
   comments: number;
 }
 
