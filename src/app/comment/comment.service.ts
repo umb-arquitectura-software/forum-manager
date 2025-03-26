@@ -28,7 +28,7 @@ export class CommentService {
   }
 
   async findAllByArticle(articleId: string) {
-    const comments = await this.CommentModel.find({ article: articleId });
+    const comments = await this.CommentModel.find({ article: articleId }).select('_id user');
     return comments;
   }
 

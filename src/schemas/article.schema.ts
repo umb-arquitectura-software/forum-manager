@@ -12,8 +12,16 @@ export class Article {
   @Prop({ required: true})
   description: string;
 
-  @Prop({ required: false})
-  ubication: string;
+  @Prop({ required: false, type: {
+    coordenates: [Number],
+    country: String,
+    city: String
+  }})
+  ubication: {
+    coordenates: number[];
+    country: string;
+    city: string;
+  }
 
   @Prop({ required: false})
   img: string;

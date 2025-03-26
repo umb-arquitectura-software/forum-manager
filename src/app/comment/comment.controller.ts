@@ -17,7 +17,7 @@ export class CommentController {
     return this.commentService.findAll();
   }
 
-  @Get('byArticle/:article_Id')
+  @Get('by-article/:article_Id')
   findAllByArticle(@Param('article_Id') article_Id: string) {
     return this.commentService.findAllByArticle(article_Id);
   }

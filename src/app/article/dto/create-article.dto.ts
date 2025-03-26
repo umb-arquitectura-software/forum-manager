@@ -7,8 +7,11 @@ export class CreateArticleDto {
   @IsString()
   description: string;
 
-  @IsString()
-  ubication: string;
+  ubication: {
+    coordenates: number[];
+    country: string;
+    city: string;
+  }
 
   @IsString()
   img: string;
