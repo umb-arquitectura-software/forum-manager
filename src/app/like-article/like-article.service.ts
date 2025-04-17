@@ -4,13 +4,16 @@ import { UpdateLikeArticleDto } from './dto/update-like-article.dto';
 import { LikeArticle } from 'src/schemas/like-article.schema';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
+import { AbstractService } from 'src/interfaces/Abstract.service';
 
 @Injectable()
-export class LikeArticleService {
+export class LikeArticleService extends AbstractService<LikeArticle> {
 
   constructor(
     @InjectModel(LikeArticle.name) private LikeArticleModel: Model<LikeArticle>
-  ) {  }
+  ) { 
+    super(LikeArticleModel);
+  }
 
 
   async create(createLikeArticleDto: CreateLikeArticleDto) {
@@ -30,14 +33,6 @@ export class LikeArticleService {
   async findAllByArticleId(articleId: string) {
     const likes = await this.LikeArticleModel.find({ article: { articleId } }).select('_id').lean();
     return likes?.map(like => like._id);
-  }
-
-  async findAll() {
-    return await this.LikeArticleModel.find().lean();
-  }
-
-  async findOne(_id: string) {
-    return await this.LikeArticleModel.findById(_id).lean();
   }
 
   async update(_id: string, updateLikeArticleDto: UpdateLikeArticleDto) {

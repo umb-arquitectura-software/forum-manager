@@ -1,4 +1,4 @@
-import { IsNumber, IsString } from "class-validator";
+import { IsBoolean, IsNumber, IsString } from "class-validator";
 
 export class CreateArticleDto {
   @IsString()
@@ -18,6 +18,9 @@ export class CreateArticleDto {
 
   @IsString()
   animalId: string;
+
+  @IsBoolean()
+  isEndangered: boolean;
 
   user: {
     userId: string;

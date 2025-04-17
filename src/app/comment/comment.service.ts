@@ -4,13 +4,16 @@ import { UpdateCommentDto } from './dto/update-comment.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Comment } from 'src/schemas/comment.schema';
+import { AbstractService } from 'src/interfaces/Abstract.service';
 
 @Injectable()
-export class CommentService {
+export class CommentService extends AbstractService<Comment> {
 
   constructor(
     @InjectModel(Comment.name) private CommentModel: Model<Comment>,
-  ) { }
+  ) {
+    super(CommentModel);
+  }
 
   async create(createCommentDto: CreateCommentDto) {
     if (!createCommentDto?.user?.userId) throw new BadRequestException('userId-required', 'El id del usuario es obligatorio');
@@ -20,11 +23,6 @@ export class CommentService {
 
     const comment = new this.CommentModel(createCommentDto);
     return comment.save();
-  }
-
-  async findAll() {
-    const comments = await this.CommentModel.find();
-    return comments;
   }
 
   async findAllByArticle(articleId: string) {
@@ -46,12 +44,6 @@ export class CommentService {
     const comments = await this.CommentModel.find({ user: userId, article: articleId });
     return comments;
   } 
-
-  async findOne(id: string) {
-    if (!this.CommentModel.exists({ _id: id })) throw new BadRequestException('comment-not-found', 'El comentario no existe');
-    const comment = await this.CommentModel.findById(id);
-    return comment;
-  }
 
   async update(id: string, updateCommentDto: UpdateCommentDto) {
     if (!this.CommentModel.exists({ _id: id })) throw new BadRequestException('comment-not-found', 'El comentario no existe');

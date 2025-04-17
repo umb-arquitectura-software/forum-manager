@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { LikeArticleService } from './like-article.service';
 import { CreateLikeArticleDto } from './dto/create-like-article.dto';
 import { UpdateLikeArticleDto } from './dto/update-like-article.dto';
+import PageableQueryDto from 'src/interfaces/pageableQueryDto';
 
 @Controller('like-article')
 export class LikeArticleController {
@@ -20,6 +21,11 @@ export class LikeArticleController {
   @Get('by-article/:articleId')
   findAllByArticleId(@Param('articleId') articleId: string) {
     return this.likeArticleService.findAllByArticleId(articleId);
+  }
+
+  @Post('/pageable')
+  findAllPageable(@Body() query: PageableQueryDto) {
+    return this.likeArticleService.findAllPageable(query);
   }
 
   @Get()

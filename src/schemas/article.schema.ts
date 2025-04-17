@@ -29,6 +29,9 @@ export class Article {
   @Prop({ required: false})
   animalId: string;
 
+  @Prop({ required: false})
+  isEndangered: boolean;
+
   @Prop({ required: true, type: {
     userId: String,
     username: String
