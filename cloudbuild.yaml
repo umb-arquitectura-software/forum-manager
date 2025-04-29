@@ -1,14 +1,18 @@
 steps:
-  # Paso 1: Generar archivo .env con el secreto
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: 'bash'
     args:
       - '-c'
       - |
-        echo "MONGODB_CONNECTION_STRING=$(gcloud secrets versions access latest --secret=forum_manager_mongo_connection)" > .env
-        cat .env | sed 's/MONGODB_CONNECTION_STRING=.*/MONGODB_CONNECTION_STRING=*****/' # Log seguro
-    id: generate-env
-    secretEnv: ['MONGODB_CONNECTION_STRING']
+        CONN_STR=$(gcloud secrets versions access latest --secret=forum_manager_mongo_connection --quiet)
+        echo "MONGODB_CONNECTION_STRING=$$CONN_STR" > .env
+        docker build -t gcr.io/$PROJECT_ID/forum-manager:$COMMIT_SHA .
+        docker push gcr.io/$PROJECT_ID/forum-manager:$COMMIT_SHA
+        gcloud run deploy forum-manager \
+          --image gcr.io/$PROJECT_ID/forum-manager:$COMMIT_SHA \
+          --platform managed \
+          --region us-central1 \
+          --allow-unauthenticated
 
   # Paso 2: Build de la imagen Docker
   - name: 'gcr.io/cloud-builders/docker'
