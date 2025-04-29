@@ -1,0 +1,58 @@
+steps:
+  # Paso 1: Generar archivo .env con el secreto
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        echo "MONGODB_CONNECTION_STRING=$(gcloud secrets versions access latest --secret=forum_manager_mongo_connection)" > .env
+        cat .env | sed 's/MONGODB_CONNECTION_STRING=.*/MONGODB_CONNECTION_STRING=*****/' # Log seguro
+    id: generate-env
+    secretEnv: ['MONGODB_CONNECTION_STRING']
+
+  # Paso 2: Build de la imagen Docker
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'gcr.io/$PROJECT_ID/forum-manager:$COMMIT_SHA', '.']
+    id: build
+
+  # Paso 3: Push de la imagen
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/$PROJECT_ID/forum-manager:$COMMIT_SHA']
+    id: push
+
+  # Paso 4: Despliegue en Cloud Run (Fully Managed - modo más económico)
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    args:
+      - 'gcloud'
+      - 'run'
+      - 'deploy'
+      - 'forum-manager'
+      - '--image'
+      - 'gcr.io/$PROJECT_ID/forum-manager:$COMMIT_SHA'
+      - '--platform'
+      - 'managed'
+      - '--region'
+      - 'us-central1' # Cambia según tu región preferida
+      - '--allow-unauthenticated'
+      - '--cpu' # Configuración económica
+      - '1'
+      - '--memory'
+      - '512Mi'
+      - '--min-instances'
+      - '0' # Escala a cero cuando no hay tráfico
+      - '--max-instances'
+      - '1'
+      - '--concurrency'
+      - '80' # Máximo concurrent requests por instancia
+      - '--timeout'
+      - '300s'
+    id: deploy
+
+secrets:
+- kmsKeyName: projects/396169517538/locations/global/keyRings/gcp-key-ring/cryptoKeys/cloudbuild-key
+  secretEnv:
+    MONGODB_CONNECTION_STRING: $(gcloud secrets versions access latest --secret=forum_manager_mongo_connection)
+
+options:
+  logging: CLOUD_LOGGING_ONLY
+  machineType: 'E2_HIGHCPU_8'
